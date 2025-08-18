@@ -1,0 +1,95 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+vector<int> getpi(vector<int>& pattern) {
+
+	int size = pattern.size();
+	vector<int> pi(size, 0);
+	int start = 1;
+	int matched_len = 0;
+
+	while (start + matched_len < size) {
+		//원본 문자열 대비 복사된 문자열은 start만큼의 gap을 가지고 오른쪽으로 이동
+		//이 gap을 메우기 위해 원본 문자열에서는 start + matched 접근, 복사된 문자열은 matched 접근
+		if (pattern[start + matched_len] == pattern[matched_len]) { //둘이 같으면?????????? 
+			matched_len++; //길이 증가
+			pi[start + matched_len - 1] = matched_len; //pi배열에 넣음 (0-based)
+		}
+		else { //다르면???????????
+			if (matched_len == 0) { //다른데 맞는것도 없었으면???????????
+				start++; //무지성 +1해버리기
+			}
+			else { //적어도 뭐가 맞긴 하면????????????
+				start += matched_len - pi[matched_len - 1]; //최대 맞은 개수에서 최장 접두사 길이만큼 빼서 점프
+				matched_len = pi[matched_len - 1]; //점프 후 맞은 개수는 최장 접미사 길이와 같다
+			}
+		}
+	}
+
+	return pi;
+}
+
+vector<int> kmp(vector<int>& pattern, vector<int>& s) {
+	vector<int> ans;
+	int p_size = pattern.size();
+	int s_size = s.size();
+
+	vector<int> pi = getpi(pattern);
+
+	int start = 0;
+	int matched_len = 0;
+
+	while (start <= s_size - p_size) {
+		if (matched_len < p_size && s[start + matched_len] == pattern[matched_len]) {
+			matched_len++;
+			if (matched_len == p_size) {
+				ans.push_back(start);
+			}
+		}
+		else {
+			if (matched_len == 0) {
+				start++;
+			}
+			else {
+				start += matched_len - pi[matched_len - 1];
+				matched_len = pi[matched_len - 1];
+			}
+		}
+	}
+	return ans;
+}
+
+
+int main() {
+
+	vector<int> v1(720'000, 0);
+	vector<int> v2(360'000, 0);
+	int n;
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		int x;
+		cin >> x;
+		v1[x] = 1;
+		v1[x + 360'000] = 1;
+	}
+	for (int i = 0; i < n; i++) {
+		int x;
+		cin >> x;
+		v2[x] = 1;
+	}
+
+	auto ans = kmp(v2, v1);
+
+	if (ans.size() == 0) {
+		cout << "impossible";
+	}
+	else {
+		cout << "possible";
+	}
+
+
+	return 0;
+}

@@ -5,9 +5,14 @@ vector<vector<char>> visited;
 queue<pair<int, int>> path;
 int n;
 
-
 int dx[] = { 1,2,2,1,-1,-2,-2,-1 };
 int dy[] = { 2,1,-1,-2,-2,-1,1,2 };
+
+int ucleed_dist(int x1, int y1) {
+	int x2 = n / 2;
+	int y2 = n / 2;
+	return (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
+}
 
 int get_degree(int px, int py, int x, int y) {
 	int cnt = 0;
@@ -42,6 +47,12 @@ bool huri(int& x, int& y) {
 					min_degree = degree;
 					mx = nx;
 					my = ny;
+				}
+				else if (degree == min_degree) {
+					if (ucleed_dist(nx, ny) > ucleed_dist(mx, my)) {
+						mx = nx;
+						my = ny;
+					}
 				}
 			}
 		}

@@ -24,15 +24,15 @@ int main() {
 		q.push(x);
 	}
 
-	int cnt = 0;
+	ll cnt = 0;
 
 	while (cnt < k && !q.empty()) {
-		int cur = q.front();
+		ll cur = q.front();
 		q.pop();
 		cout << dist[cur] << "\n";
 		cnt++;
 		for (int i = 0; i < 2; i++) {
-			int next = cur + d[i];
+			ll next = cur + d[i];
 			if (0 <= next && next <= l && dist.find(next) == dist.end()) {
 				dist[next] = dist[cur] + 1;
 				q.push(next);

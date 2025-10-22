@@ -15,6 +15,7 @@ int main() {
 
 	queue<ll> q;
 	map<ll, ll> dist;
+	dist.clear();
 
 	for (int i = 0; i < n; i++) {
 		ll x;
@@ -23,36 +24,20 @@ int main() {
 		q.push(x);
 	}
 
-	int cnt = 1;
+	int cnt = 0;
 
 	while (cnt < k && !q.empty()) {
 		int cur = q.front();
 		q.pop();
+		cout << dist[cur] << "\n";
+		cnt++;
 		for (int i = 0; i < 2; i++) {
 			int next = cur + d[i];
-			if (0 <= next && next <= l && dist.count(next) == 0) {
+			if (0 <= next && next <= l && dist.find(next) == dist.end()) {
 				dist[next] = dist[cur] + 1;
 				q.push(next);
-				cnt++;
 			}
 		}
 	}
-	
-	vector<int> v;
-	for (auto i : dist) {
-		v.push_back(i.second);
-	}
-
-	sort(v.begin(), v.end());
-
-	cnt = 0;
-	for (auto i : v) {
-		cout << i << "\n";
-		if (++cnt == k) return 0;
-	}
-
-
-
-
 	return 0;
 }
